@@ -51,7 +51,7 @@ class AdditiveGaussianNoiseAutoencoder(object):
 
 		# 定义网络结构
 		self.x = tf.placeholder(tf.float32, [None, self.n_input])
-		self.hidden = self.transfer(tf.add(tf.matmul(self.x + scale * tf.random_normal(n_input,)), self.weights['w1'], self.weights['b1']))	# 
+		self.hidden = self.transfer(tf.add(tf.matmul(self.x + scale * tf.random_normal((n_input,)), self.weights['w1']), self.weights['b1']))	# 
 		self.reconstruction = tf.add(tf.matmul(self.hidden, self.weights['w2']), self.weights['b2'])	# tf.add() 和 “直接使用 + 操作”的区别，还有tf.add_n()函数
 
 		# 定义自编码的损失函数
@@ -62,58 +62,58 @@ class AdditiveGaussianNoiseAutoencoder(object):
 		self.sess = tf.Session()
 		self.sess.run(init)
 
-def _initialize_weights(self):
-	all_weights = dict()
-	# n_input = n_output
+	def _initialize_weights(self):
+		all_weights = dict()
+		# n_input = n_output
 
-	all_weights['w1'] = tf.Variable(xavier_init(self.n_input, self.n_hidden))
-	all_weights['b1'] = tf.Variable(tf.zeros([self.n_hidden], tf.float32))
-	all_weights['w2'] = tf.Variable(xavier_init(self.n_hidden, self.n_input))
-	all_weights['b2'] = tf.Variable(tf.zeros([self.n_input], tf.float32))
+		all_weights['w1'] = tf.Variable(xavier_init(self.n_input, self.n_hidden))
+		all_weights['b1'] = tf.Variable(tf.zeros([self.n_hidden], tf.float32))
+		all_weights['w2'] = tf.Variable(xavier_init(self.n_hidden, self.n_input))
+		all_weights['b2'] = tf.Variable(tf.zeros([self.n_input], tf.float32))
 
-	return all_weights
-
-
-### 
-# 作用：用一个 batch 数据进行训练，并返回当前的损失 cost
-# 
-def partial_fit(self, X):
-	cost, opt = self.sess.run((self.cost, self.optimizer), feed_dict = {self.x: X, self.scale: self.training_scale})
-	return cost
-
-###
-# 作用：只求损失函数的值；
-# 什么时候使用：在自编码器训练完毕后，在测试集上对模型进行评测时会用到。
-def calc_total_cost(self, X):
-	return self.sess.run(self.cost, feed_dict = {self.x: X, self.scale: self.training_scale})
-
-### 
-# 作用：返回自编码器隐含层的输出结果，提供一个接口来获取抽象后的特征
-# 自编码器的隐含层：最主要的功能就是学习出数据中的高阶特征
-def transform(self, X):
-	return self.sess.run(self.hidden, feed_dict = {self.x: X, self.scale: training_scale})
-
-### 
-# 作用：将隐含层的输出结果作为输入，通过之后的重建层将提取得到的高阶特征复原为原始数据
-# 
-def generate(self, hidden = None):
-	if hidden is None:
-		hidden = np.random_normal(size = self.weights['b1'])
-	return self.sess.run(self.reconstruction, feed_dict = {self.hidden: hidden})
-
-### 
-# 作用：整体运行一遍复原过程，包括提取高阶特征、通过高阶特征复原数据
-# 输入为原始数据，输出为复员后的数据
-# 
-def reconstruct(self, X):
-	return self.sess.run(self.reconstruction, feed_dict = {self.x: X, self.scale: self.training_scale})
+		return all_weights
 
 
-def getWeights(self):
-	return self.sess.run(self.weights['w1'])
+	### 
+	# 作用：用一个 batch 数据进行训练，并返回当前的损失 cost
+	# 
+	def partial_fit(self, X):
+		cost, opt = self.sess.run((self.cost, self.optimizer), feed_dict = {self.x: X, self.scale: self.training_scale})
+		return cost
 
-def getBiases(self):
-	return self.sess.run(self.weights['b1'])
+	###
+	# 作用：只求损失函数的值；
+	# 什么时候使用：在自编码器训练完毕后，在测试集上对模型进行评测时会用到。
+	def calc_total_cost(self, X):
+		return self.sess.run(self.cost, feed_dict = {self.x: X, self.scale: self.training_scale})
+
+	### 
+	# 作用：返回自编码器隐含层的输出结果，提供一个接口来获取抽象后的特征
+	# 自编码器的隐含层：最主要的功能就是学习出数据中的高阶特征
+	def transform(self, X):
+		return self.sess.run(self.hidden, feed_dict = {self.x: X, self.scale: training_scale})
+
+	### 
+	# 作用：将隐含层的输出结果作为输入，通过之后的重建层将提取得到的高阶特征复原为原始数据
+	# 
+	def generate(self, hidden = None):
+		if hidden is None:
+			hidden = np.random_normal(size = self.weights['b1'])
+		return self.sess.run(self.reconstruction, feed_dict = {self.hidden: hidden})
+
+	### 
+	# 作用：整体运行一遍复原过程，包括提取高阶特征、通过高阶特征复原数据
+	# 输入为原始数据，输出为复员后的数据
+	# 
+	def reconstruct(self, X):
+		return self.sess.run(self.reconstruction, feed_dict = {self.x: X, self.scale: self.training_scale})
+
+
+	def getWeights(self):
+		return self.sess.run(self.weights['w1'])
+
+	def getBiases(self):
+		return self.sess.run(self.weights['b1'])
 
 
 ### 
@@ -143,8 +143,7 @@ def get_random_block_from_data(data, batch_size):
 mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
 X_train, X_test = standard_scale(mnist.train.images, mnist.test.images)	# 对数据集和测试集进行标准化处理
 n_samples = int(mnist.train.num_examples)
-print("n_samples = %d" % n_samples)
-training_epochs = 20
+training_epochs = 2000
 batch_size = 128
 display_step = 1
 
@@ -166,7 +165,7 @@ for epoch in range(training_epochs):
 	if epoch % display_step == 0:
 		print("Epoch:", '%04d' % (epoch + 1), "cost = ", "{:.9f}".format(avg_cost))
 
-
+print("n_samples = %d" % n_samples)
 print("Total cost: " + str(autoencoder.calc_total_cost(X_test)))
 
 

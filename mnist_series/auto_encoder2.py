@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,7 +9,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=False)
 
 learning_rate = 0.01
-training_epochs = 10
+training_epochs = 200
 batch_size = 256
 display_step = 1
 examples_to_show = 10
