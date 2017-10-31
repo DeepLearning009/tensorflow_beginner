@@ -154,9 +154,10 @@ autoencoder = AdditiveGaussianNoiseAutoencoder(n_input = 784,
 										scale = 0.1
 	)
 
+
+total_batch = int(n_samples / batch_size)
 for epoch in range(training_epochs):
 	avg_cost = 0.
-	total_batch = int(n_samples / batch_size)
 	for i in range(total_batch):
 		batch_xs = get_random_block_from_data(X_train, batch_size)
 		cost = autoencoder.partial_fit(batch_xs)
