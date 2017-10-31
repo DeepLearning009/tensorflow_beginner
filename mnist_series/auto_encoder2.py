@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+# 
+# ##
+# reference: 
+# 1) auto_encoder -> http://blog.csdn.net/marsjhao/article/details/68950697
+# 2) log -> http://blog.csdn.net/smf0504/article/details/56369758
+# 
 
 import tensorflow as tf
 import numpy as np
@@ -68,7 +74,7 @@ y_true = X
 cost = tf.reduce_mean(tf.pow(y_true - y_pred, 2)) #最小二乘法
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
 
-saver = tf.train.Saver()
+# saver = tf.train.Saver()
 with tf.Session() as sess:
     # tf.initialize_all_variables() no long valid from
     # 2017-03-02 if using tensorflow >= 0.12
@@ -77,8 +83,9 @@ with tf.Session() as sess:
     else:
         init = tf.global_variables_initializer()
     sess.run(init)
-    merged = tf.summary.merge_all()
-    writer = tf.summary.FileWriter("./logs", sess.graph)    # 日志
+    # merged = tf.summary.merge_all()
+    # merged = tf.merge_all_summaries() 
+    # writer = tf.summary.FileWriter("./logs", sess.graph)    # 日志
 
     # 首先计算总批数，保证每次循环训练集中的每个样本都参与训练，不同于批量训练
     total_batch = int(mnist.train.num_examples/batch_size) #总批数
@@ -86,13 +93,12 @@ with tf.Session() as sess:
         for i in range(total_batch):
             batch_xs, batch_ys = mnist.train.next_batch(batch_size)  # max(x) = 1, min(x) = 0
             # Run optimization op (backprop) and cost op (to get loss value)
-            summary, _, c = sess.run([merged, optimizer, cost], feed_dict={X: batch_xs})
-            writer.add_summary(summary, i)
+            _, c = sess.run([optimizer, cost], feed_dict={X: batch_xs})
+
         if epoch % display_step == 0:
             print("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(c))
-
     print("Optimization Finished!")
-    saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME))
+    # saver.save(sess, os.path.join(MODEL_SAVE_PATH, MODEL_NAME))
 
     encode_decode = sess.run(
         y_pred, feed_dict={X: mnist.test.images[:examples_to_show]})
@@ -102,4 +108,4 @@ with tf.Session() as sess:
         a[1][i].imshow(np.reshape(encode_decode[i], (28, 28)))
     plt.show()
     
-    writer.close()
+    # writer.close()
