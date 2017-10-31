@@ -39,7 +39,7 @@ def softmax_model(mnist):
 				v_accuracy = tf.reduce_mean(tf.cast(v_correct_prediction, tf.float32))
 				batch_validation_xs, batch_validation_ys = mnist.validation.next_batch(BATCH_SIZE)
 				sess.run(v_accuracy, feed_dict = {x_input: batch_validation_xs, y_labels: batch_validation_ys})
-				print("After %d training step(s), acc = %g" % (i, v_accuracy))
+				#	print("After %d training step(s), acc = %g" % (i, v_accuracy))
 
 		# set test image batch.
 		# Before this, the model has been trained.
