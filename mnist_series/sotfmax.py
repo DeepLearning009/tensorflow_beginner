@@ -15,15 +15,15 @@ def dataset_info(mnist):
 	print("...")
 
 
-def sotfmax_model(mnist):
+def softmax_model(mnist):
 	x_input = tf.placeholder(tf.float32, [None, INPUT_NODE], "x_input")
 	y_labels = tf.placeholder(tf.float32, [None, OUTPUT_NODE], "y_labels")
 	weights = tf.get_variable("weights", [INPUT_NODE, OUTPUT_NODE], initializer = tf.truncated_normal_initializer(stddev = 0.1))
 	biases = tf.get_variable("biases", [OUTPUT_NODE], initializer = tf.constant_initializer(0.0))
 
 	# y_result = tf.nn.relu(tf.matmul(x_input, weights) + biases)
-	y_result = tf.nn.sotfmax(tf.matmul(x_input, weights) + biases)
-	cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_labels * tf.log(y), reduction_indices = [1]))
+	y_result = tf.nn.softmax(tf.matmul(x_input, weights) + biases)
+	cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_labels * tf.log(y_result), reduction_indices = [1]))
 	train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
 
@@ -56,7 +56,7 @@ def sotfmax_model(mnist):
 def main(argv = None):
 	mnist = input_data.read_data_sets("MNIST_data/", one_hot = True)
 	dataset_info(mnist)
-	sotfmax_model(mnist)
+	softmax_model(mnist)
 
 if __name__ == '__main__':
 	tf.app.run()
