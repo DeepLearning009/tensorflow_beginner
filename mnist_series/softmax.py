@@ -38,7 +38,7 @@ def softmax_model(mnist):
 				v_correct_prediction = tf.equal(tf.argmax(y_labels, 1), tf.argmax(y_result, 1))
 				v_accuracy = tf.reduce_mean(tf.cast(v_correct_prediction, tf.float32))
 				
-				sess.run(v_accuracy, feed_dict = {x_input: mnist.validation.next_batch(BATCH_SIZE), y_labels: mnist.validation.next_batch(BATCH_SIZE)})
+				sess.run(v_accuracy, feed_dict = {x_input: mnist.validation.images.next_batch(BATCH_SIZE), y_labels: mnist.validation.labels.next_batch(BATCH_SIZE)})
 				print("After %d training step(s), acc = %g" % (i, v_accuracy))
 
 		# set test image batch.
@@ -51,7 +51,7 @@ def softmax_model(mnist):
 			# correct_prediction = tf.equal(tf.argmax(y_labels, 1), tf.argmax(y_result, 1))
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 			acc += accuracy
-			sess.run(accuracy, feed_dict = {x_input: mnist.test.next_batch(BATCH_SIZE), y_labels: mnist.test.next_batch(BATCH_SIZE)})
+			sess.run(accuracy, feed_dict = {x_input: mnist.test.images.next_batch(BATCH_SIZE), y_labels: mnist.test.labels.next_batch(BATCH_SIZE)})
 		print("acc = %g"% (acc/accounts))
 
 
