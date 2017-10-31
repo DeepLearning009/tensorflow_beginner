@@ -50,9 +50,9 @@ def softmax_model(mnist):
 		for it in range(accounts):
 			# correct_prediction = tf.equal(tf.argmax(y_labels, 1), tf.argmax(y_result, 1))
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-			acc += accuracy
+			#acc += accuracy
 			batch_test_xs, batch_test_ys = mnist.test.next_batch(BATCH_SIZE)
-			sess.run(accuracy, feed_dict = {x_input: batch_test_xs, y_labels: batch_test_ys})
+			acc += sess.run(accuracy, feed_dict = {x_input: batch_test_xs, y_labels: batch_test_ys})
 		print("acc = %g"% (acc/accounts))
 
 
