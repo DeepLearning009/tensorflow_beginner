@@ -14,6 +14,7 @@ dropout = 0.9
 data_dir = './MNIST_data'
 log_dir = './logs'
 
+
 # 使用input_data.read_data_sets下载MNIST数据，并创建Tensorflow的默认Session
 mnist = input_data.read_data_sets(data_dir, one_hot=True)
 sess = tf.InteractiveSession()
@@ -192,6 +193,10 @@ learning_rate = 0.001
 dropout = 0.9
 data_dir = './MNIST_data'
 log_dir = './logs'
+
+# command: tensorboard --logdir logs
+# reference -> https://github.com/tensorflow/tensorboard
+
 
 # 使用input_data.read_data_sets下载MNIST数据，并创建Tensorflow的默认Session
 mnist = input_data.read_data_sets(data_dir, one_hot=True)
